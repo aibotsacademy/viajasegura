@@ -106,7 +106,53 @@
 <div style="width:100%;height:500px;" id="map_canvas"></div>
 
         
+ <script src="//code.jquery.com/jquery.min.js"></script>
+    <script type="text/javascript">
 
+    var apiKey = "e55060c5f204d7a69d485ba7cb7ba2aa";
+    var apiUrl = "//viajasegura.qrd.by/api/";
+
+    /**
+     * Sample API Call to view all QR Codes
+     * Please pay attention to the &jsoncallback=? parameter an the end of the request.
+     * The parameter is used after the API call by jQuery.getJSON to request the 
+     * callback function below.
+     */
+    var apiGetQRCodes = apiUrl + "qrcodes?key=" + apiKey + "&jsoncallback=?";
+
+
+    $(function() {
+        $('#getCodes').click(function() {
+            // API Call
+            $.getJSON(apiGetQRCodes)
+            .done(function(data){
+
+                /*
+                 * The callback function is called from the API. 
+                 * The resulting JSON object "data" may be accessed through: data.result.qrcodes 
+                 */
+
+                var items = [];
+                 $.each(data.result.qrcodes, function(key, val) {
+                        items.push(
+                        '<li id="' + key + '"><img src="' + val.qr + '/1" />' +
+                        '<a target="_blank" href="' + val.shorturl + '">' + val.id +
+                        '</a> was scanned ' + val.scans + ' time(s).</li>');
+                });
+                $('<ul/>', {
+                        'class': 'my-new-list',
+                        html: items.join('')
+                }).appendTo('#result');   
+            });
+        });
+    });
+    </script>
+    <div>
+        Click <a href="#" id="getCodes">here</a>
+        to view all QR Codes.
+    </div>
+    <div id="result"></div>
+        
 
     <!-- breadcrumb start-->
 
