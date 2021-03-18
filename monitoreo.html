@@ -154,6 +154,57 @@
     <div id="result"></div>
         
 
+<script src="//code.jquery.com/jquery.min.js"></script>
+<script type="text/javascript">
+
+var apiKey = "e55060c5f204d7a69d485ba7cb7ba2aa";
+var apiUrl = "//viajasegura.qrd.by/api/";
+var code   = "miruta"; // id of QR Code
+
+/**
+* Sample API Call to view scanning stats of QR Code
+* This parameter is used by jQuery.getJSON to 
+* call the Callback Function after the API request
+*/
+var apiQRCodesStats = apiUrl + "details?key=" + apiKey + "&id=" + code + "&jsoncallback=?";
+
+$(function() {
+
+    $('#getStats').click(function() {
+        $('#stats-container').html('');
+        $.getJSON(apiQRCodesStats).done(function(data) {
+            $('<h2>Requests: ' + data.result.requestcount + " Unique Visitors: " + data.result.uniqevisitors + '</h2>').appendTo('#stats');
+            var items = [];
+            $.each(data.result.requests, function(key, val) {
+                items.push(
+                        '<tr><td>' + val.requestdate + '</td>' +
+                        '<td>' + val.browser + '</td>' +
+                        '<td>' + val.os + '</td>' +
+                        '<td>' + val.model + '</td>' +
+                        '<td>' + val.brand + '</td>' +
+                        '<td>' + val.country + '</td>' +
+                        '<td>' + val.region + '</td>' +
+                        '<td>' + val.lng + '</td>' +
+                        '<td>' + val.lat + '</td>' +
+                        '</tr>');
+            });
+
+            $('<table/>', {
+                'class': 'my-new-list',
+                html: items.join('')
+            }).appendTo('#stats-container');
+        });
+        return false;
+    });
+});
+</script>
+<div>
+    Click <a href="#" id="getStats">here</a>
+    get the scanning statistics of a QR Code.
+</div>
+<div id="stats-container"></div>
+    
+
     <!-- breadcrumb start-->
 
 
